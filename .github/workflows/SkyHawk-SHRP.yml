@@ -115,7 +115,7 @@ jobs:
         cat > .repo/local_manifests/fix-lptools.xml << 'EOF'
         <?xml version="1.0" encoding="UTF-8"?>
         <manifest>
-          <project name="phhusson/vendor_lptools" path="external/lptools" remote="github" revision="master" clone-depth="1" />
+          <remove-project name="phhusson/vendor_lptools" />
         </manifest>
         EOF
 
