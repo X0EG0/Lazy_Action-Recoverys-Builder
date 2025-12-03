@@ -107,10 +107,23 @@ jobs:
         git config --global user.email "154446636+lazycodebuilder@users.noreply.github.com"
         repo init --depth=1 -u ${{ inputs.MANIFEST }} -b ${{ inputs.MANIFEST_BRANCH }}
 
+    - name: Fix broken lptools repo (v3_11.0)
+      if: inputs.MANIFEST_BRANCH == 'v3_11.0'
+      run: |
+        cd android-recovery
+        mkdir -p .repo/local_manifests
+        cat > .repo/local_manifests/fix-lptools.xml << 'EOF'
+        <?xml version="1.0" encoding="UTF-8"?>
+        <manifest>
+          <remove-project name="nickel-oem-caf/vendor_lptools" />
+          <project name="phhusson/vendor_lptools" path="external/lptools" remote="github" revision="master" clone-depth="1" />
+        </manifest>
+        EOF
+
     - name: Repo Sync
       run: |
         cd android-recovery
-        repo sync -j$(nproc --all) --force-sync
+        repo sync -j$(nproc --all) --force-sync || repo sync -j1 --fail-fast --force-sync
       
     - name: Clone Device Tree
       run: |
