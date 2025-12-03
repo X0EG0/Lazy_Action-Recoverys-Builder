@@ -123,6 +123,16 @@ jobs:
       run: |
         cd android-recovery
         repo sync -j$(nproc --all) --force-sync || repo sync -j1 --fail-fast --force-sync
+
+    - name: Add empty lptools namespace (v3_11.0)
+      if: inputs.MANIFEST_BRANCH == 'v3_11.0'
+      run: |
+        cd android-recovery
+        mkdir -p external/lptools
+        cat > external/lptools/Android.bp << 'EOF'
+        soong_namespace {
+        }
+        EOF
       
     - name: Clone Device Tree
       run: |
